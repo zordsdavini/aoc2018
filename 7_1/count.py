@@ -21,16 +21,10 @@ start.sort()
 waiting = start[::-1]
 
 result = ''
-clock = 0
-shelf = {}
-while len(waiting) or len(shelf):
-    clock += 1
-
-    for i in shelf:
-        shelf[i] -= 1
-
+while len(waiting):
+    not_added = True
     back = []
-    while len(shelf) < 5 and len(waiting) > 0:
+    while not_added:
         f = waiting.pop()
         if f in to_l:
             all = True
@@ -41,25 +35,18 @@ while len(waiting) or len(shelf):
                 back.append(f)
                 continue
 
-        shelf[f] = string.ascii_uppercase.index(f) + 60
+        result += f
+        not_added = False
 
     waiting += back
 
-    shelf_sorted = [i for i in shelf.keys()]
-    shelf_sorted.sort()
-    for f in shelf_sorted:
-        if shelf[f] > 0:
-            continue
-
-        del shelf[f]
-        result += f
-        if f in from_l:
-            cc = from_l[f]
-            for c in cc:
-                if c not in waiting and c not in result:
-                    waiting.append(c)
+    if f in from_l:
+        cc = from_l[f]
+        for c in cc:
+            if c not in waiting and c not in result:
+                waiting.append(c)
 
     waiting.sort()
     waiting.reverse()
 
-print('Result:', clock)
+print('Result:', result)
